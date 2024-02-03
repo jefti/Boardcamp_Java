@@ -26,10 +26,10 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerModel> createCustomer(@RequestBody @Valid CustomerDTO body){
-        if(customerService.existsByName(body.getName())){
+        
+        if(customerService.existsByCpf(body.getCpf())){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        
         CustomerModel customer = customerService.save(body);
         return ResponseEntity.status(HttpStatus.CREATED).body(customer);
     }

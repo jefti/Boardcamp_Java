@@ -23,4 +23,8 @@ public class CustomerService {
     public boolean existsByName(String name){
         return customerRepository.existsByName(name);
     }
+
+    public boolean existsByCpf(String cpf){
+        return customerRepository.existsByCpf(cpf);
+    }
 }
