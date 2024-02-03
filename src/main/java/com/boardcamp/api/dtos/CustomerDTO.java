@@ -2,7 +2,9 @@ package com.boardcamp.api.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Data;
 
+@Data
 public class CustomerDTO {
     @NotBlank(message = "Field name is mandatory.")
     private String name;
