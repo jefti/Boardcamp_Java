@@ -39,7 +39,8 @@ public class RentalsController {
     } 
     
     @GetMapping
-    public List<RentalModel> findAll(){
-        
+    public ResponseEntity<List<RentalModel>> getdAllTweets(){
+        List<RentalModel> rentals = rentalsService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(rentals);
     }
 }
