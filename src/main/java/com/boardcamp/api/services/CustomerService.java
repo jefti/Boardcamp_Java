@@ -1,6 +1,5 @@
 package com.boardcamp.api.services;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ public class CustomerService {
         return customerRepository.existsByCpf(cpf);
     }
 
-    public Optional<CustomerModel> findByCustomerId(Long id){
+    public Optional<CustomerModel> findByCustomerId(long id){
         return customerRepository.findById(id);
     }
 }
