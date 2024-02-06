@@ -17,16 +17,15 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/customers")
-public class CustomerController {
+public class CustomersController {
     final CustomerService customerService;
 
-    CustomerController(CustomerService customerService){
+    CustomersController(CustomerService customerService){
         this.customerService = customerService;
     }
 
     @PostMapping
     public ResponseEntity<CustomerModel> createCustomer(@RequestBody @Valid CustomerDTO body){
-        
         if(customerService.existsByCpf(body.getCpf())){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
