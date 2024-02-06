@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.boardcamp.api.models.RentalModel;
 
 @Repository
-public interface RentalRepository extends JpaRepository<RentalModel, Long>{
+public interface RentalsRepository extends JpaRepository<RentalModel, Long>{
     
 }
