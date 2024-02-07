@@ -1,10 +1,10 @@
 package com.boardcamp.api.services;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import com.boardcamp.api.dtos.CustomerDTO;
+import com.boardcamp.api.exceptions.CustomerConflictException;
+import com.boardcamp.api.exceptions.CustomerNotFoundException;
 import com.boardcamp.api.models.CustomerModel;
 import com.boardcamp.api.repositories.CustomerRepository;
 
@@ -18,6 +18,9 @@ public class CustomerService {
     }
 
     public CustomerModel save(CustomerDTO dto){
+        if(existsByCpf(dto.getCpf())){
+            throw new CustomerConflictException("CPF informado já está em uso.");
+        }
         CustomerModel customer = new CustomerModel(dto);
         return customerRepository.save(customer);
     }
@@ -30,7 +33,9 @@ public class CustomerService {
         return customerRepository.existsByCpf(cpf);
     }
 
-    public Optional<CustomerModel> findByCustomerId(long id){
-        return customerRepository.findById(id);
+    public CustomerModel findByCustomerId(long id){
+        return customerRepository.findById(id).orElseThrow(
+            ()-> new CustomerNotFoundException("Usuario com id '"+ id +"' não encontrado.")
+        );
     }
 }

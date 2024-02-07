@@ -1,7 +1,6 @@
 package com.boardcamp.api.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +29,8 @@ public class RentalsController {
 
     @PostMapping
     public ResponseEntity<RentalModel> createRental(@RequestBody @Valid RentalDTO body){
-        Optional<RentalModel> rental = rentalsService.save(body);
-        if(!rental.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(rental.get());
+        RentalModel rental = rentalsService.save(body);
+        return ResponseEntity.status(HttpStatus.CREATED).body(rental);
     } 
     
     @GetMapping

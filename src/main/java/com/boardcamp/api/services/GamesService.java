@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.boardcamp.api.dtos.GameDTO;
+import com.boardcamp.api.exceptions.GameConflictException;
 import com.boardcamp.api.models.GameModel;
 import com.boardcamp.api.repositories.GamesRepository;
 
@@ -18,6 +19,9 @@ public class GamesService {
     }
 
     public GameModel save(GameDTO dto){
+        if(existsByName(dto.getName())){
+            throw new GameConflictException("Um jogo com o nome '" + dto.getName()+"' já foi registrado.");
+        }
         GameModel gameModel = new GameModel(dto);
         return gamesRepository.save(gameModel);
     }

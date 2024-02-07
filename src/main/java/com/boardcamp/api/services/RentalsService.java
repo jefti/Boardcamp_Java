@@ -2,11 +2,13 @@ package com.boardcamp.api.services;
 
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.boardcamp.api.dtos.RentalDTO;
+import com.boardcamp.api.exceptions.CustomerNotFoundException;
+import com.boardcamp.api.exceptions.GameNotFoundException;
+import com.boardcamp.api.exceptions.RentalUnprocessableEntityException;
 import com.boardcamp.api.models.CustomerModel;
 import com.boardcamp.api.models.GameModel;
 import com.boardcamp.api.models.RentalModel;
@@ -26,18 +28,22 @@ public class RentalsService {
         this.customerRepository = customerRepository;
     }
 
-    public Optional<RentalModel> save(RentalDTO dto){
-        Optional<CustomerModel> customer = customerRepository.findById(dto.getCustomerId());
-        if(!customer.isPresent()){
-            return Optional.empty();
-        }
-        Optional<GameModel> game = gamesRepository.findById(dto.getGameId());
-        if(!game.isPresent()){
-            return Optional.empty();
-        }
+    public RentalModel save(RentalDTO dto){
+        CustomerModel customer = customerRepository.findById(dto.getCustomerId()).orElseThrow(
+            ()-> new CustomerNotFoundException("Not found Customer with id "+ dto.getCustomerId() + ".")
+        );
         
-        RentalModel rental = new RentalModel(dto, game.get(), customer.get());
-        return Optional.of(rentalsRepository.save(rental));
+        GameModel game = gamesRepository.findById(dto.getGameId()).orElseThrow(
+            ()-> new GameNotFoundException("Not found Game with id "+ dto.getGameId()+".")
+        );
+        
+        List<RentalModel> rentals = rentalsRepository.findValidRentalById(dto.getGameId());
+
+        if(rentals.size() >= game.getStockTotal()){
+            throw new RentalUnprocessableEntityException("O jogo "+ game.getName()+" Possui "+ game.getStockTotal() + " cópias disponiveis, e todas já estão alugadas no momento." );
+        }
+        RentalModel rental = new RentalModel(dto, game, customer);
+        return rentalsRepository.save(rental);
     }
 
     public List<RentalModel> findAll(){

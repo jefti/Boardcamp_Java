@@ -29,9 +29,6 @@ public class GamesController {
 
     @PostMapping
     public ResponseEntity<GameModel> createGame(@RequestBody @Valid GameDTO body){
-        if(gamesService.existsByName(body.getName())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
         GameModel game = gamesService.save(body);
         return ResponseEntity.status(HttpStatus.CREATED).body(game);
     }
