@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,7 +20,7 @@ import com.boardcamp.api.repositories.GamesRepository;
 import com.boardcamp.api.services.GamesService;
 
 @SpringBootTest
-public class GameUnitTests {
+class GameUnitTests {
     @InjectMocks
     private GamesService gamesService;
 
