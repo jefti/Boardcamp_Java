@@ -1,6 +1,8 @@
 package com.boardcamp.api.services;
 
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.boardcamp.api.dtos.RentalDTO;
 import com.boardcamp.api.exceptions.CustomerNotFoundException;
 import com.boardcamp.api.exceptions.GameNotFoundException;
+import com.boardcamp.api.exceptions.RentalNotFoundException;
 import com.boardcamp.api.exceptions.RentalUnprocessableEntityException;
 import com.boardcamp.api.models.CustomerModel;
 import com.boardcamp.api.models.GameModel;
@@ -48,5 +51,28 @@ public class RentalsService {
 
     public List<RentalModel> findAll(){
         return rentalsRepository.findAll();
+    }
+
+    public RentalModel updateById(long id){
+        RentalModel rental = rentalsRepository.findById(id).orElseThrow(
+            ()-> new RentalNotFoundException("Aluguel não encontrado.")
+        );
+
+        if(rental.getReturnDate() != null){
+            throw new RentalUnprocessableEntityException("Aluguel informado já está concluido.");
+        }
+
+        LocalDate today = LocalDate.now();
+        Duration duration = Duration.between(rental.getRentDate().atStartOfDay(), today.atStartOfDay());
+        rental.setReturnDate(today);
+    
+        long days = duration.toDays();
+        if (days > rental.getDaysRented()) {
+            int pricePerDay = rental.getGame().getPricePerDay();
+            int lateFee = pricePerDay * (int)(days - rental.getDaysRented());
+            rental.setDelayFee(lateFee);
+        }
+
+        return rentalsRepository.save(rental);
     }
 }
