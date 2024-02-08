@@ -20,7 +20,7 @@ import com.boardcamp.api.repositories.CustomerRepository;
 import com.boardcamp.api.services.CustomerService;
 
 @SpringBootTest
-class CustomerUnitTest {
+class CustomerUnitTests {
     @InjectMocks
     private CustomerService customerService;
 
